@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+    <dict>
+        <key>id</key>
+        <string>keycloak-demo</string>
+        <key>name</key>
+        <string>keycloak</string>
+        <key>displayName</key>
+        <string>Keycloak Demo</string>
+        <key>authorizationEndpoint</key>
+        <string>https://demo.keycloak.org/auth/realms/demo/protocol/openid-connect/auth</string>
+        <key>tokenEndpoint</key>
+        <string>https://demo.keycloak.org/auth/realms/demo/protocol/openid-connect/token</string>
+        <key>userInfoEndpoint</key>
+        <string>https://demo.keycloak.org/auth/realms/demo/protocol/openid-connect/userinfo</string>
+        <key>clientId</key>
+        <string>demo-client</string>
+        <key>scope</key>
+        <string>openid profile email</string>
+        <key>isDefault</key>
+        <true/>
+    </dict>
+    <dict>
+        <key>id</key>
+        <string>auth0-demo</string>
+        <key>name</key>
+        <string>auth0</string>
+        <key>displayName</key>
+        <string>Auth0 Demo</string>
+        <key>authorizationEndpoint</key>
+        <string>https://dev-example.auth0.com/authorize</string>
+        <key>tokenEndpoint</key>
+        <string>https://dev-example.auth0.com/oauth/token</string>
+        <key>userInfoEndpoint</key>
+        <string>https://dev-example.auth0.com/userinfo</string>
+        <key>clientId</key>
+        <string>your-client-id</string>
+        <key>scope</key>
+        <string>openid profile email</string>
+        <key>isDefault</key>
+        <false/>
+    </dict>
+</array>
+</plist>
