@@ -12,6 +12,12 @@ struct ContentView: View {
                 LoadingView(message: "Authenticating...")
             case .authenticated(let user):
                 MainAppView(user: user)
+                    .onTapGesture {
+                        authManager.refreshUserActivity()
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                        authManager.refreshUserActivity()
+                    }
             case .biometricPrompt:
                 BiometricPromptView()
             case .error(let error):
@@ -19,6 +25,7 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut, value: authManager.authenticationState)
+        .backgroundSecurity()
     }
 }
 

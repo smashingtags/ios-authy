@@ -85,6 +85,7 @@ class AuthenticationManager: ObservableObject {
             
             authenticationState = .authenticated(user)
             scheduleTokenRefresh(tokens: tokens)
+            refreshUserActivity() // Start session timeout
             
         } catch {
             authenticationState = .error(error as? AuthenticationError ?? .unknownError(error))
@@ -228,6 +229,7 @@ class AuthenticationManager: ObservableObject {
             } else {
                 authenticationState = .authenticated(user)
                 scheduleTokenRefresh(tokens: tokens)
+                refreshUserActivity() // Start session timeout
             }
         } catch {
             authenticationState = .unauthenticated
@@ -248,6 +250,7 @@ class AuthenticationManager: ObservableObject {
             if let user: User = try keychainManager.retrieve(User.self, forKey: KeychainManager.Keys.user) {
                 authenticationState = .authenticated(user)
                 scheduleTokenRefresh(tokens: newTokens)
+                refreshUserActivity() // Reset session timeout after token refresh
             }
         } catch {
             authenticationState = .error(.tokenExpired)
