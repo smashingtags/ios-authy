@@ -106,7 +106,10 @@ The app includes comprehensive test coverage with both unit and integration test
 - Foreground token refresh with different expiration states
 - Session timeout and user activity tracking validation
 - Authentication-to-logout flow integration testing
-- Error handling and recovery scenarios
+- Network communication layer with comprehensive HTTP request/response testing
+- SSL validation and HTTPS enforcement testing
+- Network connectivity monitoring and offline state handling
+- Error handling and recovery scenarios across all components
 - Mock-based testing for isolated component verification
 - Comprehensive keychain operations testing with real and mock implementations
 
@@ -159,12 +162,29 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 ```
 
 #### Test Architecture
-The test suite includes three main categories:
+The test suite includes comprehensive coverage across all major components:
+- **NetworkManagerTests**: Complete HTTP communication layer testing with mocked responses
 - **KeychainManagerTests**: Comprehensive testing of secure storage operations with both real and mock implementations
 - **SessionManagementIntegrationTest**: End-to-end authentication lifecycle testing
+- **SessionManagementTests**: Session timeout and activity tracking validation
 - **BiometricManagerTests**: Biometric authentication flow testing
+- **AuthenticationManagerTests**: Central authentication coordinator testing
+- **IdentityProviderServiceTests**: OAuth/OIDC authentication flow testing
+- **ConfigurationManagerTests**: Provider configuration management testing
+- **LoginViewModelTests**: Login screen business logic testing
 
 Each test class includes both positive and negative test cases, error simulation, and integration scenarios to ensure robust functionality.
+
+#### NetworkManagerTests Features
+The `NetworkManagerTests` class provides comprehensive HTTP communication layer testing:
+- **HTTP Request/Response Testing**: Complete testing of GET/POST requests with mocked URLSession responses
+- **Network Error Simulation**: Comprehensive testing of timeout, SSL, and connectivity error scenarios
+- **HTTPS Enforcement Testing**: Validation that non-HTTPS URLs are properly rejected
+- **SSL Certificate Validation**: Testing of SSL certificate validation and security error handling
+- **Network Connectivity Monitoring**: Testing of NWPathMonitor integration and offline state detection
+- **Custom Configuration Testing**: Validation of custom headers, timeouts, and request body handling
+- **Mock Framework**: Comprehensive MockURLSession and MockNetworkManager for isolated testing
+- **Error Mapping**: Testing of URLError to NetworkError conversion and proper error propagation
 
 ## Usage
 
@@ -251,7 +271,7 @@ xcodebuild -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth 
 - **SwiftUI**: User interface framework
 - **Security**: Keychain Services for secure token storage
 - **LocalAuthentication**: Biometric authentication (Face ID/Touch ID/Optic ID)
-- **Network**: Connectivity monitoring and HTTPS communication
+- **Network**: NWPathMonitor for connectivity monitoring and URLSession for HTTPS communication
 - **Combine**: Reactive programming for state management
 
 ### Project Configuration

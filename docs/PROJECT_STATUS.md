@@ -53,6 +53,7 @@ The iOS Identity Provider Authentication App is a comprehensive, production-read
 - **Unit Tests**: Individual component testing with mocked dependencies
 - **Integration Tests**: End-to-end testing with real component interactions
 - **Session Management Tests**: Comprehensive authentication lifecycle testing
+- **Network Layer Tests**: Complete HTTP communication testing with mocked responses
 - **Biometric Testing**: Complete biometric authentication flow testing
 - **Mock Framework**: Comprehensive mocking infrastructure for isolated testing
 
@@ -79,6 +80,13 @@ func testCompleteAuthenticationToLogoutFlow() async
 ```
 
 ### Unit Test Coverage:
+- **NetworkManagerTests**: Complete HTTP communication layer testing
+  - HTTP request/response handling with mocked URLSession
+  - Network error scenarios (timeout, SSL, connectivity issues)
+  - HTTPS enforcement and SSL certificate validation
+  - Network connectivity monitoring and offline state handling
+  - Custom headers and timeout configuration testing
+  - Comprehensive mock framework for isolated network testing
 - **KeychainManagerTests**: Comprehensive keychain storage operations testing
   - Complete CRUD operations testing (store, retrieve, delete, deleteAll)
   - Data type support testing with AuthTokens, User, and IdentityProvider models
@@ -110,7 +118,7 @@ func testCompleteAuthenticationToLogoutFlow() async
 - **Security**: Keychain Services integration
 - **LocalAuthentication**: Biometric authentication support
 - **Combine**: Reactive programming framework
-- **Network**: HTTPS communication and connectivity monitoring
+- **Network**: NWPathMonitor for connectivity monitoring and URLSession for HTTPS communication
 
 ## Security Implementation
 
