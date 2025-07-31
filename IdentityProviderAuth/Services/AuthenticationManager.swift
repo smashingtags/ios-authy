@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UIKit
 
 @MainActor
 class AuthenticationManager: ObservableObject {
@@ -15,6 +16,11 @@ class AuthenticationManager: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     private var tokenRefreshTimer: Timer?
+    private var sessionTimeoutTimer: Timer?
+    private var lastActivityTime: Date = Date()
+    
+    // Session timeout configuration (30 minutes)
+    private let sessionTimeoutInterval: TimeInterval = 30 * 60
     
     init(
         keychainManager: KeychainManagerProtocol = KeychainManager(),
@@ -31,10 +37,12 @@ class AuthenticationManager: ObservableObject {
         
         loadConfiguration()
         setupNetworkMonitoring()
+        setupAppLifecycleMonitoring()
     }
     
     deinit {
         tokenRefreshTimer?.invalidate()
+        sessionTimeoutTimer?.invalidate()
     }
     
     // MARK: - Public Methods
@@ -139,6 +147,8 @@ class AuthenticationManager: ObservableObject {
     func logout() {
         tokenRefreshTimer?.invalidate()
         tokenRefreshTimer = nil
+        sessionTimeoutTimer?.invalidate()
+        sessionTimeoutTimer = nil
         
         do {
             try keychainManager.deleteAll()
@@ -147,6 +157,22 @@ class AuthenticationManager: ObservableObject {
         }
         
         authenticationState = .unauthenticated
+    }
+    
+    func refreshUserActivity() {
+        lastActivityTime = Date()
+        resetSessionTimeout()
+    }
+    
+    func handleAppWillEnterForeground() {
+        Task {
+            await refreshTokensIfNeeded()
+        }
+    }
+    
+    func handleAppDidEnterBackground() {
+        // Session timeout will continue running in background
+        // iOS will suspend the app after a short time anyway
     }
     
     func selectProvider(_ provider: IdentityProvider) {
@@ -238,6 +264,68 @@ class AuthenticationManager: ObservableObject {
             Task {
                 await self?.refreshTokens(tokens)
             }
+        }
+    }
+    
+    private func setupAppLifecycleMonitoring() {
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .sink { [weak self] _ in
+                self?.handleAppWillEnterForeground()
+            }
+            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)
+            .sink { [weak self] _ in
+                self?.handleAppDidEnterBackground()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func resetSessionTimeout() {
+        guard case .authenticated = authenticationState else { return }
+        
+        sessionTimeoutTimer?.invalidate()
+        sessionTimeoutTimer = Timer.scheduledTimer(withTimeInterval: sessionTimeoutInterval, repeats: false) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleSessionTimeout()
+            }
+        }
+    }
+    
+    private func handleSessionTimeout() {
+        guard case .authenticated = authenticationState else { return }
+        
+        // Check if user has been inactive for the timeout period
+        let timeSinceLastActivity = Date().timeIntervalSince(lastActivityTime)
+        if timeSinceLastActivity >= sessionTimeoutInterval {
+            logout()
+        } else {
+            // Reset timer for remaining time
+            let remainingTime = sessionTimeoutInterval - timeSinceLastActivity
+            sessionTimeoutTimer = Timer.scheduledTimer(withTimeInterval: remainingTime, repeats: false) { [weak self] _ in
+                Task { @MainActor in
+                    self?.handleSessionTimeout()
+                }
+            }
+        }
+    }
+    
+    private func refreshTokensIfNeeded() async {
+        guard case .authenticated = authenticationState else { return }
+        
+        do {
+            guard let tokens: AuthTokens = try keychainManager.retrieve(AuthTokens.self, forKey: KeychainManager.Keys.authTokens) else {
+                authenticationState = .unauthenticated
+                return
+            }
+            
+            // Check if token is close to expiration (within 10 minutes)
+            let timeUntilExpiration = tokens.expirationDate.timeIntervalSinceNow
+            if timeUntilExpiration < 600 { // 10 minutes
+                await refreshTokens(tokens)
+            }
+        } catch {
+            authenticationState = .unauthenticated
         }
     }
 }
