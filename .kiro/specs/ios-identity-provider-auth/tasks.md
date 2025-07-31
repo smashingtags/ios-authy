@@ -14,7 +14,7 @@
   - ✅ Implement secure token storage with appropriate keychain access controls
   - ✅ Add methods for storing, retrieving, and deleting authentication tokens
   - ✅ Handle keychain errors and edge cases
-  - [ ] Write unit tests for keychain operations with mocked keychain services
+  - [-] Write unit tests for keychain operations with mocked keychain services
   - _Requirements: 1.3, 2.2, 5.3_
 
 - [x] 3. Create network communication layer

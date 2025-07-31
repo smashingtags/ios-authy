@@ -76,14 +76,26 @@
 			isa = PBXGroup;
 			children = (
 				1A000001294A1234567890AC /* IdentityProviderAuth */,
+				1A000008294A1234567890AC /* IdentityProviderAuthTests */,
 				1A000000294A1234567890AC /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		1A000008294A1234567890AC /* IdentityProviderAuthTests */ = {
+			isa = PBXGroup;
+			children = (
+				1A000029294A1234567890AB /* BiometricManagerTests.swift */,
+				1A00002B294A1234567890AB /* SessionManagementIntegrationTest.swift */,
+				1A00002D294A1234567890AB /* SessionManagementTests.swift */,
+			);
+			path = IdentityProviderAuthTests;
 			sourceTree = "<group>";
 		};
 		1A000000294A1234567890AC /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				1AFFFFFF294A1234567890AB /* IdentityProviderAuth.app */,
+				1A000030294A1234567890AB /* IdentityProviderAuthTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,7 +200,43 @@
 			productReference = 1AFFFFFF294A1234567890AB /* IdentityProviderAuth.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1A000031294A1234567890AB /* IdentityProviderAuthTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A000032294A1234567890AB /* Build configuration list for PBXNativeTarget "IdentityProviderAuthTests" */;
+			buildPhases = (
+				1A000033294A1234567890AB /* Sources */,
+				1A00002F294A1234567890AB /* Frameworks */,
+				1A000034294A1234567890AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A000035294A1234567890AB /* PBXTargetDependency */,
+			);
+			name = IdentityProviderAuthTests;
+			productName = IdentityProviderAuthTests;
+			productReference = 1A000030294A1234567890AB /* IdentityProviderAuthTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		1A000035294A1234567890AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1AFFFFFE294A1234567890AB /* IdentityProviderAuth */;
+			targetProxy = 1A000036294A1234567890AB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		1A000036294A1234567890AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AFFFFF7294A1234567890AB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AFFFFFE294A1234567890AB;
+			remoteInfo = IdentityProviderAuth;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXProject section */
 		1AFFFFF7294A1234567890AB /* Project object */ = {
@@ -217,6 +265,7 @@
 			projectRoot = "";
 			targets = (
 				1AFFFFFE294A1234567890AB /* IdentityProviderAuth */,
+				1A000031294A1234567890AB /* IdentityProviderAuthTests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,6 +278,13 @@
 				1A000008294A1234567890AB /* Preview Assets.xcassets in Resources */,
 				1A000005294A1234567890AB /* Assets.xcassets in Resources */,
 				1A000028294A1234567890AB /* IdentityProviders.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A000034294A1234567890AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +309,16 @@
 				1A000024294A1234567890AB /* BiometricSetupView.swift in Sources */,
 				1A000026294A1234567890AB /* BackgroundSecurityView.swift in Sources */,
 				1A000001294A1234567890AB /* IdentityProviderAuthApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A000033294A1234567890AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A00002A294A1234567890AB /* BiometricManagerTests.swift in Sources */,
+				1A00002C294A1234567890AB /* SessionManagementIntegrationTest.swift in Sources */,
+				1A00002E294A1234567890AB /* SessionManagementTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +502,42 @@
 			};
 			name = Release;
 		};
+		1A000037294A1234567890AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.IdentityProviderAuthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IdentityProviderAuth.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IdentityProviderAuth";
+			};
+			name = Debug;
+		};
+		1A000038294A1234567890AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.IdentityProviderAuthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IdentityProviderAuth.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IdentityProviderAuth";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -453,6 +555,15 @@
 			buildConfigurations = (
 				1A00000C294A1234567890AB /* Debug */,
 				1A00000D294A1234567890AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A000032294A1234567890AB /* Build configuration list for PBXNativeTarget "IdentityProviderAuthTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A000037294A1234567890AB /* Debug */,
+				1A000038294A1234567890AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

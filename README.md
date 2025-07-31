@@ -260,6 +260,15 @@ xcodebuild -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth 
 - "Token expired": Automatic refresh failed, re-authentication required
 - "Session timeout": User was inactive for 30 minutes and automatically logged out
 
+## Documentation
+
+For comprehensive information about this project, see the documentation in the `docs/` folder:
+
+- **[Architecture Documentation](docs/ARCHITECTURE.md)**: Detailed architecture overview, design patterns, and component interactions
+- **[Installation Guide](docs/INSTALLATION.md)**: Complete setup and configuration instructions
+- **[Security Documentation](docs/SECURITY.md)**: Comprehensive security implementation details
+- **[Project Status](docs/PROJECT_STATUS.md)**: Current implementation status and production readiness
+
 ## License
 
 This project is provided as a reference implementation for iOS identity provider authentication.
@@ -281,6 +290,14 @@ This project is provided as a reference implementation for iOS identity provider
 - Reset iOS Simulator if testing
 - Check keychain access group configuration
 - Verify app bundle identifier
+
+## Recent Updates
+
+The Xcode project file has been updated to include:
+- Complete test target configuration with all test files
+- Proper build phases for unit and integration tests
+- Updated project structure reflecting all implemented components
+- Full integration test suite for session management and biometric authentication
 
 ## Contributing
 
