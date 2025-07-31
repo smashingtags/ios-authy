@@ -78,9 +78,12 @@ func authenticateWithBiometrics() async throws -> Bool {
 ```
 
 #### Biometric Security Features
+- **User Preference Management**: Persistent storage of biometric authentication preferences
+- **Smart Setup Prompting**: Intelligent first-time setup prompting with user control
 - **Automatic Fallback**: Falls back to password on biometric failure
-- **User Control**: Users can choose to use or skip biometric authentication
+- **User Control**: Users can enable/disable biometric authentication at any time
 - **Device Support**: Supports Face ID, Touch ID, and Optic ID
+- **Setup State Tracking**: Prevents repeated prompting after user has made a choice
 
 ### 4. Application Security
 

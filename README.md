@@ -7,11 +7,12 @@ A native iOS application that provides secure authentication through configurabl
 - **Native iOS Authentication**: Clean SwiftUI interface with username/password login
 - **OAuth 2.0 & OpenID Connect**: Support for standard authentication protocols
 - **Secure Token Storage**: Uses iOS Keychain Services for secure token management
-- **Biometric Authentication**: Face ID/Touch ID support for returning users
+- **Biometric Authentication**: Face ID/Touch ID/Optic ID support with user preference management
 - **Multi-Provider Support**: Configure multiple identity providers
 - **Automatic Token Refresh**: Seamless session management
 - **Network Resilience**: Handles connectivity issues and service unavailability
 - **Security First**: HTTPS-only communication, screen capture prevention
+- **Smart Biometric Setup**: Intelligent prompting for biometric authentication setup
 
 ## Architecture
 
@@ -43,7 +44,8 @@ IdentityProviderAuth/
 ├── Views/
 │   ├── ContentView.swift                # Main app coordinator
 │   ├── LoginView.swift                  # Authentication UI
-│   └── MainAppView.swift                # Post-auth interface
+│   ├── MainAppView.swift                # Post-auth interface
+│   └── BiometricSetupView.swift         # Biometric setup prompting
 └── Configuration/
     └── IdentityProviders.plist          # Provider configurations (Keycloak & Auth0 demos)
 ```
@@ -104,19 +106,29 @@ The app includes pre-configured demo providers for testing:
 ### Authentication Flow
 
 1. **Launch**: App checks for existing valid tokens
-2. **Biometric Prompt**: If available and previously authenticated
-3. **Login Screen**: Username/password authentication
+2. **Biometric Prompt**: If available and previously enabled by user
+3. **Login Screen**: Username/password authentication with optional biometric fallback
 4. **Provider Selection**: Choose from configured providers (if multiple)
-5. **Main App**: Access authenticated features
-6. **Automatic Refresh**: Tokens refreshed automatically
+5. **Biometric Setup**: Smart prompting for first-time biometric setup
+6. **Main App**: Access authenticated features with biometric toggle
+7. **Automatic Refresh**: Tokens refreshed automatically
 
 ### Security Features
 
 - **Keychain Storage**: All tokens stored securely in iOS Keychain
 - **HTTPS Only**: All network communication uses TLS
-- **Biometric Protection**: Optional Face ID/Touch ID authentication
+- **Biometric Protection**: Optional Face ID/Touch ID/Optic ID authentication
 - **Screen Protection**: Prevents screenshots of sensitive screens
 - **Session Management**: Automatic logout on token expiration
+
+### Biometric Authentication Features
+
+- **Smart Setup Prompting**: Intelligent first-time setup that respects user choice
+- **User Preference Management**: Persistent storage of biometric authentication preferences
+- **Flexible Control**: Users can enable/disable biometric authentication at any time
+- **Automatic Fallback**: Seamless fallback to password authentication when biometrics fail
+- **Device Support**: Full support for Face ID, Touch ID, and Optic ID
+- **Privacy First**: Biometric data never leaves the device
 
 ## Configuration Options
 
@@ -171,6 +183,13 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 2. **Network Issues**: Check internet connectivity and provider availability
 3. **Keychain Errors**: May require app reinstall during development
 4. **Biometric Failures**: Ensure device supports and has biometrics configured
+
+### Biometric Authentication Issues
+
+- **Setup Not Appearing**: Biometric setup only prompts once per user choice
+- **Authentication Failing**: Check device biometric enrollment and app permissions
+- **Preference Not Saving**: Verify UserDefaults access and app permissions
+- **Fallback Not Working**: Ensure password authentication is properly configured
 
 ### Error Messages
 

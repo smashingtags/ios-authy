@@ -81,17 +81,25 @@ struct LoginView: View {
                 .padding(.horizontal)
                 
                 // Biometric Authentication Option
-                if BiometricManager().isBiometricAuthenticationAvailable() {
-                    Button(action: {
-                        Task {
-                            await authManager.authenticateWithBiometrics()
+                if authManager.isBiometricAuthenticationEnabled() && authManager.getBiometricType() != .none {
+                    VStack(spacing: 10) {
+                        Text("or")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                        
+                        Button(action: {
+                            Task {
+                                await authManager.authenticateWithBiometrics()
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: biometricIcon)
+                                Text("Use \(biometricName)")
+                            }
+                            .foregroundColor(.blue)
+                            .padding(.vertical, 8)
                         }
-                    }) {
-                        HStack {
-                            Image(systemName: biometricIcon)
-                            Text("Use \(biometricName)")
-                        }
-                        .foregroundColor(.blue)
+                        .disabled(viewModel.isLoading)
                     }
                     .padding(.top, 10)
                 }
@@ -106,7 +114,7 @@ struct LoginView: View {
     }
     
     private var biometricIcon: String {
-        switch BiometricManager().getBiometricType() {
+        switch authManager.getBiometricType() {
         case .faceID:
             return "faceid"
         case .touchID:
@@ -119,7 +127,7 @@ struct LoginView: View {
     }
     
     private var biometricName: String {
-        BiometricManager().getBiometricType().displayName
+        authManager.getBiometricType().displayName
     }
 }
 

@@ -88,3 +88,23 @@ enum AuthenticationError: LocalizedError {
         }
     }
 }
+
+enum BiometricAuthenticationError: LocalizedError {
+    case notAvailable
+    case userCancelled
+    case lockout
+    case failed
+    
+    var errorDescription: String? {
+        switch self {
+        case .notAvailable:
+            return "Biometric authentication is not available"
+        case .userCancelled:
+            return "Biometric authentication was cancelled"
+        case .lockout:
+            return "Biometric authentication is locked out. Please try again later."
+        case .failed:
+            return "Biometric authentication failed"
+        }
+    }
+}

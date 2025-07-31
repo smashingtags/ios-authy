@@ -3,6 +3,7 @@ import SwiftUI
 struct MainAppView: View {
     let user: User
     @EnvironmentObject private var authManager: AuthenticationManager
+    @State private var showBiometricSetup = false
     
     var body: some View {
         NavigationView {
@@ -40,6 +41,30 @@ struct MainAppView: View {
                     if let displayName = user.displayName {
                         InfoRow(label: "Display Name", value: displayName)
                     }
+                    
+                    // Biometric Authentication Toggle
+                    if authManager.getBiometricType() != .none {
+                        HStack {
+                            Text("Biometric Login")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .frame(width: 100, alignment: .leading)
+                            
+                            Toggle("", isOn: Binding(
+                                get: { authManager.isBiometricAuthenticationEnabled() },
+                                set: { enabled in
+                                    if enabled {
+                                        authManager.enableBiometricAuthentication()
+                                    } else {
+                                        authManager.disableBiometricAuthentication()
+                                    }
+                                }
+                            ))
+                            .labelsHidden()
+                            
+                            Spacer()
+                        }
+                    }
                 }
                 .padding()
                 .background(Color(.systemGray6))
@@ -68,6 +93,16 @@ struct MainAppView: View {
             }
             .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                // Check if we should prompt for biometric setup
+                if authManager.shouldPromptForBiometricSetup() {
+                    showBiometricSetup = true
+                }
+            }
+            .sheet(isPresented: $showBiometricSetup) {
+                BiometricSetupView(biometricType: authManager.getBiometricType())
+                    .environmentObject(authManager)
+            }
         }
     }
 }

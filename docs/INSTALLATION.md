@@ -182,7 +182,10 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 1. Enable Face ID/Touch ID in iOS Simulator:
    - Device → Face ID/Touch ID → Enrolled
 2. Test biometric authentication flow
-3. Test fallback to password authentication
+3. Test biometric setup prompting on first use
+4. Test user preference management (enable/disable biometric auth)
+5. Test fallback to password authentication
+6. Test smart setup prompting behavior
 
 ## Deployment
 
@@ -239,6 +242,8 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 - Ensure biometrics are enrolled on device/simulator
 - Check Face ID/Touch ID permissions
 - Verify LocalAuthentication framework is linked
+- Test biometric setup prompting flow
+- Verify user preference persistence across app launches
 
 ### Debug Logging
 

@@ -5,6 +5,10 @@ protocol BiometricManagerProtocol {
     func isBiometricAuthenticationAvailable() -> Bool
     func authenticateWithBiometrics() async throws -> Bool
     func getBiometricType() -> BiometricType
+    func isBiometricAuthenticationEnabled() -> Bool
+    func setBiometricAuthenticationEnabled(_ enabled: Bool)
+    func shouldPromptForBiometricSetup() -> Bool
+    func setBiometricSetupPrompted()
 }
 
 enum BiometricType {
@@ -29,6 +33,12 @@ enum BiometricType {
 
 class BiometricManager: BiometricManagerProtocol {
     private let context = LAContext()
+    private let userDefaults = UserDefaults.standard
+    
+    private enum UserDefaultsKeys {
+        static let biometricAuthEnabled = "biometric_auth_enabled"
+        static let biometricSetupPrompted = "biometric_setup_prompted"
+    }
     
     func isBiometricAuthenticationAvailable() -> Bool {
         var error: NSError?
@@ -40,6 +50,10 @@ class BiometricManager: BiometricManagerProtocol {
             throw AuthenticationError.biometricAuthenticationFailed
         }
         
+        guard isBiometricAuthenticationEnabled() else {
+            throw AuthenticationError.biometricAuthenticationFailed
+        }
+        
         let reason = "Authenticate to access your account"
         
         do {
@@ -48,8 +62,20 @@ class BiometricManager: BiometricManagerProtocol {
                 localizedReason: reason
             )
             return result
+        } catch let error as LAError {
+            switch error.code {
+            case .userCancel, .userFallback:
+                // User chose to cancel or use fallback - this is not an error
+                throw BiometricAuthenticationError.userCancelled
+            case .biometryNotAvailable, .biometryNotEnrolled:
+                throw BiometricAuthenticationError.notAvailable
+            case .biometryLockout:
+                throw BiometricAuthenticationError.lockout
+            default:
+                throw BiometricAuthenticationError.failed
+            }
         } catch {
-            throw AuthenticationError.biometricAuthenticationFailed
+            throw BiometricAuthenticationError.failed
         }
     }
     
@@ -70,5 +96,23 @@ class BiometricManager: BiometricManagerProtocol {
         @unknown default:
             return .none
         }
+    }
+    
+    func isBiometricAuthenticationEnabled() -> Bool {
+        return userDefaults.bool(forKey: UserDefaultsKeys.biometricAuthEnabled)
+    }
+    
+    func setBiometricAuthenticationEnabled(_ enabled: Bool) {
+        userDefaults.set(enabled, forKey: UserDefaultsKeys.biometricAuthEnabled)
+    }
+    
+    func shouldPromptForBiometricSetup() -> Bool {
+        return isBiometricAuthenticationAvailable() && 
+               !isBiometricAuthenticationEnabled() && 
+               !userDefaults.bool(forKey: UserDefaultsKeys.biometricSetupPrompted)
+    }
+    
+    func setBiometricSetupPrompted() {
+        userDefaults.set(true, forKey: UserDefaultsKeys.biometricSetupPrompted)
     }
 }

@@ -13,7 +13,8 @@ The iOS Identity Provider Authentication App follows a clean MVVM (Model-View-Vi
 - `ContentView`: Main coordinator that switches between authentication states
 - `LoginView`: Username/password authentication interface
 - `MainAppView`: Post-authentication user interface
-- Supporting views: `LoadingView`, `ErrorView`, `BiometricPromptView`
+- `BiometricSetupView`: Smart biometric authentication setup prompting
+- Supporting views: `LoadingView`, `ErrorView`
 
 **ViewModels** manage presentation logic and state:
 
@@ -34,7 +35,7 @@ The iOS Identity Provider Authentication App follows a clean MVVM (Model-View-Vi
 
 **Managers** handle system-level operations:
 - `KeychainManager`: Secure token storage using iOS Keychain Services
-- `BiometricManager`: Face ID/Touch ID authentication
+- `BiometricManager`: Face ID/Touch ID/Optic ID authentication with user preference management
 - `ConfigurationManager`: Identity provider configuration loading and validation
 
 ### 3. Data Layer (Models)
@@ -136,6 +137,8 @@ enum AuthenticationState {
 ### Biometric Security
 
 - **Local Authentication**: Uses iOS LocalAuthentication framework
+- **User Preferences**: Persistent storage of biometric authentication preferences
+- **Smart Setup**: Intelligent prompting for biometric setup on first use
 - **Fallback**: Password authentication when biometrics fail
 - **Privacy**: Biometric data never leaves the device
 

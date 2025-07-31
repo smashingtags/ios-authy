@@ -44,15 +44,15 @@ struct BiometricPromptView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Image(systemName: "faceid")
+            Image(systemName: biometricIcon)
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
             
-            Text("Biometric Authentication")
+            Text("\(biometricName) Authentication")
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Text("Use your biometric authentication to access your account")
+            Text("Use \(biometricName) to access your account")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -70,6 +70,23 @@ struct BiometricPromptView: View {
                 await authManager.authenticateWithBiometrics()
             }
         }
+    }
+    
+    private var biometricIcon: String {
+        switch authManager.getBiometricType() {
+        case .faceID:
+            return "faceid"
+        case .touchID:
+            return "touchid"
+        case .opticID:
+            return "opticid"
+        case .none:
+            return "person.badge.key"
+        }
+    }
+    
+    private var biometricName: String {
+        authManager.getBiometricType().displayName
     }
 }
 

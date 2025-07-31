@@ -41,7 +41,21 @@ class AuthenticationManager: ObservableObject {
     
     func checkAuthenticationStatus() {
         Task {
-            await performAuthenticationCheck()
+            // Check if we have stored tokens first
+            do {
+                let _: AuthTokens = try keychainManager.retrieve(AuthTokens.self, forKey: KeychainManager.Keys.authTokens)
+                
+                // If biometric auth is enabled and available, prompt for biometric authentication
+                if biometricManager.isBiometricAuthenticationEnabled() && biometricManager.isBiometricAuthenticationAvailable() {
+                    await authenticateWithBiometrics()
+                } else {
+                    // Otherwise, perform standard authentication check
+                    await performAuthenticationCheck()
+                }
+            } catch {
+                // No stored tokens, user needs to authenticate
+                authenticationState = .unauthenticated
+            }
         }
     }
     
@@ -85,9 +99,41 @@ class AuthenticationManager: ObservableObject {
             } else {
                 authenticationState = .error(.biometricAuthenticationFailed)
             }
+        } catch let error as BiometricAuthenticationError {
+            switch error {
+            case .userCancelled:
+                // User cancelled, return to unauthenticated state without error
+                authenticationState = .unauthenticated
+            case .notAvailable, .lockout, .failed:
+                authenticationState = .error(.biometricAuthenticationFailed)
+            }
         } catch {
             authenticationState = .error(.biometricAuthenticationFailed)
         }
+    }
+    
+    func enableBiometricAuthentication() {
+        biometricManager.setBiometricAuthenticationEnabled(true)
+    }
+    
+    func disableBiometricAuthentication() {
+        biometricManager.setBiometricAuthenticationEnabled(false)
+    }
+    
+    func shouldPromptForBiometricSetup() -> Bool {
+        return biometricManager.shouldPromptForBiometricSetup()
+    }
+    
+    func setBiometricSetupPrompted() {
+        biometricManager.setBiometricSetupPrompted()
+    }
+    
+    func isBiometricAuthenticationEnabled() -> Bool {
+        return biometricManager.isBiometricAuthenticationEnabled()
+    }
+    
+    func getBiometricType() -> BiometricType {
+        return biometricManager.getBiometricType()
     }
     
     func logout() {
