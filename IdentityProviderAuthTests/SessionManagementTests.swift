@@ -273,46 +273,4 @@ class SessionManagementTests: XCTestCase {
 
 // MARK: - Mock Extensions for Testing
 
-extension MockKeychainManager {
-    var mockRetrieveResults: [String: Any] = [:]
-    
-    override func retrieve<T: Codable>(_ type: T.Type, forKey key: String) throws -> T? {
-        if shouldThrowError {
-            throw errorToThrow
-        }
-        
-        if let result = mockRetrieveResults[key] {
-            if let directResult = result as? T {
-                return directResult
-            }
-            // Try to encode and decode for type safety
-            if let data = try? JSONEncoder().encode(result as! Codable) {
-                return try? JSONDecoder().decode(type, from: data)
-            }
-        }
-        
-        return storedItems[key].flatMap { try? JSONDecoder().decode(type, from: $0) }
-    }
-}
-
-extension MockIdentityProviderService {
-    var refreshTokenCalled = false
-    var mockRefreshTokenResult: Result<AuthTokens, Error>?
-    var onRefreshToken: (() -> Void)?
-    
-    override func refreshToken(_ refreshToken: String, provider: IdentityProvider) async throws -> AuthTokens {
-        refreshTokenCalled = true
-        onRefreshToken?()
-        
-        if let result = mockRefreshTokenResult {
-            switch result {
-            case .success(let tokens):
-                return tokens
-            case .failure(let error):
-                throw error
-            }
-        }
-        
-        return try await super.refreshToken(refreshToken, provider: provider)
-    }
-}
+// Extensions removed - functionality moved to main mock classes

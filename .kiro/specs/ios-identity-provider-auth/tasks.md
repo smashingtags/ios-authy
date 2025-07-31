@@ -230,3 +230,11 @@
     - Test cross-component interactions
     - Test error propagation across system boundaries
     - _Requirements: All requirements validation_
+
+- [ ] 20. Fix duplicate mock classes in test files
+  - Create a shared test utilities file for mock classes
+  - Remove duplicate mock class definitions from individual test files
+  - Consolidate all mock classes into a single location
+  - Update test files to import shared mock classes
+  - Ensure all tests continue to pass after refactoring
+  - _Requirements: Technical debt cleanup for test maintainability_

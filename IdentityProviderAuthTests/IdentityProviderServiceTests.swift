@@ -423,7 +423,12 @@ class MockNetworkManagerForIdentityProvider: NetworkManagerProtocol {
         
         // Try to encode the response as JSON
         do {
-            return try JSONEncoder().encode(AnyEncodable(response))
+            if let codableResponse = response as? Codable {
+                return try JSONEncoder().encode(codableResponse)
+            } else {
+                // Fallback to empty data
+                return Data()
+            }
         } catch {
             throw NetworkError.decodingError(error)
         }

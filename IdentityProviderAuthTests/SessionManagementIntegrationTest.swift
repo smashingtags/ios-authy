@@ -494,31 +494,4 @@ class SessionManagementIntegrationTest: XCTestCase {
 }
 
 // MARK: - Mock Extensions for Integration Testing
-
-extension MockIdentityProviderService {
-    var mockAuthenticateResult: Result<(AuthTokens, User), Error>?
-    
-    override func authenticate(credentials: Credentials, provider: IdentityProvider) async throws -> AuthTokens {
-        if let result = mockAuthenticateResult {
-            switch result {
-            case .success(let (tokens, _)):
-                return tokens
-            case .failure(let error):
-                throw error
-            }
-        }
-        return try await super.authenticate(credentials: credentials, provider: provider)
-    }
-    
-    override func getUserInfo(accessToken: String, provider: IdentityProvider) async throws -> User {
-        if let result = mockAuthenticateResult {
-            switch result {
-            case .success(let (_, user)):
-                return user
-            case .failure(let error):
-                throw error
-            }
-        }
-        return try await super.getUserInfo(accessToken: accessToken, provider: provider)
-    }
-}
+// Extensions removed - functionality moved to main MockIdentityProviderService class
