@@ -26,8 +26,10 @@ The iOS Identity Provider Authentication App follows a clean MVVM (Model-View-Vi
 **AuthenticationManager**: Central coordinator for all authentication operations
 - Manages authentication state transitions
 - Coordinates between different services
-- Handles token refresh and session management
+- Handles token refresh and session management with 30-minute inactivity timeout
 - Implements network connectivity monitoring
+- Manages app lifecycle events for foreground/background transitions
+- Tracks user activity and automatically logs out inactive sessions
 
 **Services** handle external communication:
 - `IdentityProviderService`: OAuth 2.0/OpenID Connect implementation
@@ -119,6 +121,15 @@ enum AuthenticationState {
 2. **Refresh Request** → IdentityProviderService refreshes tokens
 3. **Token Update** → KeychainManager updates stored tokens
 4. **Schedule Next** → Timer scheduled for next refresh
+5. **Session Reset** → User activity timer reset after successful refresh
+
+### Session Management Flow
+
+1. **User Activity** → Any user interaction refreshes activity timestamp
+2. **Timeout Timer** → 30-minute countdown timer started/reset
+3. **Inactivity Check** → Timer expiration triggers inactivity check
+4. **Automatic Logout** → User logged out if inactive for 30 minutes
+5. **App Lifecycle** → Foreground transition triggers token refresh check
 
 ## Security Architecture
 

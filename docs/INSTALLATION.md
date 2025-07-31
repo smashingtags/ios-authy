@@ -187,6 +187,13 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 5. Test fallback to password authentication
 6. Test smart setup prompting behavior
 
+#### Session Management Testing
+1. Test 30-minute inactivity timeout
+2. Test user activity tracking (interactions reset timer)
+3. Test app lifecycle behavior (foreground/background)
+4. Test automatic token refresh on app foreground
+5. Test session timeout during background state
+
 ## Deployment
 
 ### Development Deployment
@@ -244,6 +251,13 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 - Verify LocalAuthentication framework is linked
 - Test biometric setup prompting flow
 - Verify user preference persistence across app launches
+
+#### Session Management
+- Test inactivity timeout behavior (30 minutes)
+- Verify user activity tracking resets timeout
+- Check app lifecycle handling (foreground/background)
+- Test automatic token refresh on app resume
+- Verify secure logout on session timeout
 
 ### Debug Logging
 

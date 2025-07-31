@@ -98,7 +98,20 @@ struct MainAppView: View {
                 if authManager.shouldPromptForBiometricSetup() {
                     showBiometricSetup = true
                 }
+                // Track user activity when view appears
+                authManager.refreshUserActivity()
             }
+            .onTapGesture {
+                // Track user activity on tap
+                authManager.refreshUserActivity()
+            }
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        // Track user activity on any gesture
+                        authManager.refreshUserActivity()
+                    }
+            )
             .sheet(isPresented: $showBiometricSetup) {
                 BiometricSetupView(biometricType: authManager.getBiometricType())
                     .environmentObject(authManager)

@@ -101,7 +101,10 @@ func sceneWillResignActive(_ scene: UIScene) {
 
 #### Session Management
 - **Automatic Logout**: Session expires after token expiration
-- **Inactivity Timeout**: Optional automatic logout after inactivity
+- **Inactivity Timeout**: 30-minute automatic logout after user inactivity
+- **Activity Tracking**: User interactions reset the inactivity timer
+- **App Lifecycle Security**: Automatic token refresh on app foreground
+- **Background Security**: Session timeout continues in background
 - **Secure State Transitions**: Proper cleanup during state changes
 
 ### 5. Data Protection

@@ -9,7 +9,9 @@ A native iOS application that provides secure authentication through configurabl
 - **Secure Token Storage**: Uses iOS Keychain Services for secure token management
 - **Biometric Authentication**: Face ID/Touch ID/Optic ID support with user preference management
 - **Multi-Provider Support**: Configure multiple identity providers
-- **Automatic Token Refresh**: Seamless session management
+- **Automatic Token Refresh**: Seamless session management with proactive token renewal
+- **Session Management**: 30-minute inactivity timeout with automatic logout
+- **App Lifecycle Handling**: Automatic token refresh on app foreground and background security
 - **Network Resilience**: Handles connectivity issues and service unavailability
 - **Security First**: HTTPS-only communication, screen capture prevention
 - **Smart Biometric Setup**: Intelligent prompting for biometric authentication setup
@@ -111,7 +113,8 @@ The app includes pre-configured demo providers for testing:
 4. **Provider Selection**: Choose from configured providers (if multiple)
 5. **Biometric Setup**: Smart prompting for first-time biometric setup
 6. **Main App**: Access authenticated features with biometric toggle
-7. **Automatic Refresh**: Tokens refreshed automatically
+7. **Session Management**: 30-minute inactivity timeout with automatic logout
+8. **Automatic Refresh**: Tokens refreshed automatically before expiration
 
 ### Security Features
 
@@ -119,7 +122,8 @@ The app includes pre-configured demo providers for testing:
 - **HTTPS Only**: All network communication uses TLS
 - **Biometric Protection**: Optional Face ID/Touch ID/Optic ID authentication
 - **Screen Protection**: Prevents screenshots of sensitive screens
-- **Session Management**: Automatic logout on token expiration
+- **Session Management**: 30-minute inactivity timeout with automatic logout
+- **App Lifecycle Security**: Automatic token refresh on foreground, secure background handling
 
 ### Biometric Authentication Features
 
@@ -129,6 +133,15 @@ The app includes pre-configured demo providers for testing:
 - **Automatic Fallback**: Seamless fallback to password authentication when biometrics fail
 - **Device Support**: Full support for Face ID, Touch ID, and Optic ID
 - **Privacy First**: Biometric data never leaves the device
+
+### Session Management Features
+
+- **Inactivity Timeout**: Automatic logout after 30 minutes of user inactivity
+- **Activity Tracking**: User interactions automatically reset the inactivity timer
+- **App Lifecycle Handling**: Automatic token refresh when app returns to foreground
+- **Background Security**: Session timeout continues running when app is in background
+- **Proactive Token Refresh**: Tokens refreshed automatically when close to expiration
+- **Secure Cleanup**: Proper cleanup of timers and resources on logout
 
 ## Configuration Options
 
@@ -191,12 +204,20 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 - **Preference Not Saving**: Verify UserDefaults access and app permissions
 - **Fallback Not Working**: Ensure password authentication is properly configured
 
+### Session Management Issues
+
+- **Unexpected Logout**: Check if 30-minute inactivity timeout has been reached
+- **Session Not Timing Out**: Verify user activity tracking is working correctly
+- **Token Refresh Failing**: Check network connectivity and provider availability
+- **App Lifecycle Issues**: Ensure proper foreground/background handling
+
 ### Error Messages
 
 - "Invalid username or password": Check credentials and provider configuration
 - "Network error": Verify internet connection and provider endpoints
 - "Configuration error": Check IdentityProviders.plist format
 - "Token expired": Automatic refresh failed, re-authentication required
+- "Session timeout": User was inactive for 30 minutes and automatically logged out
 
 ## License
 
