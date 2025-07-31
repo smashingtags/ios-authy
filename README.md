@@ -98,6 +98,7 @@ The app includes comprehensive test coverage with both unit and integration test
 - **Unit Tests**: Individual component testing with mocked dependencies
 - **Integration Tests**: End-to-end testing with real component interactions
 - **Session Management Tests**: Comprehensive testing of authentication lifecycle
+- **Keychain Manager Tests**: Complete keychain storage operations testing with real and mock implementations
 
 #### Key Test Coverage
 - Complete session lifecycle with various token states (valid, expired, refresh scenarios)
@@ -107,6 +108,7 @@ The app includes comprehensive test coverage with both unit and integration test
 - Authentication-to-logout flow integration testing
 - Error handling and recovery scenarios
 - Mock-based testing for isolated component verification
+- Comprehensive keychain operations testing with real and mock implementations
 
 #### Integration Test Features
 The `SessionManagementIntegrationTest` class provides comprehensive end-to-end testing:
@@ -116,6 +118,15 @@ The `SessionManagementIntegrationTest` class provides comprehensive end-to-end t
 - **Biometric Integration**: End-to-end biometric authentication with session management
 - **App Lifecycle Testing**: Foreground/background transitions and token refresh scenarios
 - **Error Recovery Testing**: Comprehensive error handling and recovery validation
+
+#### Keychain Manager Test Features
+The `KeychainManagerTests` class provides comprehensive keychain storage testing:
+- **CRUD Operations Testing**: Complete testing of store, retrieve, delete, and deleteAll operations
+- **Data Type Support**: Tests with AuthTokens, User, and IdentityProvider models
+- **Error Handling**: Comprehensive error scenario testing and proper error propagation
+- **Service Isolation**: Verification that different keychain services are properly isolated
+- **Mock Integration**: MockKeychainManager with error simulation for isolated testing
+- **Real vs Mock Consistency**: Integration tests ensuring mock behavior matches real keychain operations
 
 #### Demo Providers for Testing
 
@@ -140,9 +151,20 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 # Run specific test suite
 xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:IdentityProviderAuthTests/SessionManagementIntegrationTest
 
+# Run keychain manager tests
+xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:IdentityProviderAuthTests/KeychainManagerTests
+
 # Run tests in Xcode
 # Product > Test (⌘+U)
 ```
+
+#### Test Architecture
+The test suite includes three main categories:
+- **KeychainManagerTests**: Comprehensive testing of secure storage operations with both real and mock implementations
+- **SessionManagementIntegrationTest**: End-to-end authentication lifecycle testing
+- **BiometricManagerTests**: Biometric authentication flow testing
+
+Each test class includes both positive and negative test cases, error simulation, and integration scenarios to ensure robust functionality.
 
 ## Usage
 

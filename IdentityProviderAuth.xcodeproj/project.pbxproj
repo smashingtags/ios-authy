@@ -27,6 +27,7 @@
 		1A00002A294A1234567890AB /* BiometricManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A000029294A1234567890AB /* BiometricManagerTests.swift */; };
 		1A00002C294A1234567890AB /* SessionManagementIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00002B294A1234567890AB /* SessionManagementIntegrationTest.swift */; };
 		1A00002E294A1234567890AB /* SessionManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00002D294A1234567890AB /* SessionManagementTests.swift */; };
+		1A000030294A1234567890AB /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00002F294A1234567890AB /* KeychainManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		1A000029294A1234567890AB /* BiometricManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricManagerTests.swift; sourceTree = "<group>"; };
 		1A00002B294A1234567890AB /* SessionManagementIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagementIntegrationTest.swift; sourceTree = "<group>"; };
 		1A00002D294A1234567890AB /* SessionManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagementTests.swift; sourceTree = "<group>"; };
+		1A00002F294A1234567890AB /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 		1AFFFFFF294A1234567890AB /* IdentityProviderAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdentityProviderAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A000030294A1234567890AB /* IdentityProviderAuthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IdentityProviderAuthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				1A000029294A1234567890AB /* BiometricManagerTests.swift */,
+				1A00002F294A1234567890AB /* KeychainManagerTests.swift */,
 				1A00002B294A1234567890AB /* SessionManagementIntegrationTest.swift */,
 				1A00002D294A1234567890AB /* SessionManagementTests.swift */,
 			);
@@ -317,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A00002A294A1234567890AB /* BiometricManagerTests.swift in Sources */,
+				1A000030294A1234567890AB /* KeychainManagerTests.swift in Sources */,
 				1A00002C294A1234567890AB /* SessionManagementIntegrationTest.swift in Sources */,
 				1A00002E294A1234567890AB /* SessionManagementTests.swift in Sources */,
 			);

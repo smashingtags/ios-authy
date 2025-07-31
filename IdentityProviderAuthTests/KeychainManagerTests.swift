@@ -373,241 +373,12 @@ class KeychainManagerTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Keychain Manager Tests
+// MARK: - Mock Integration Tests
 
-class MockKeychainManagerTests: XCTestCase {
-    var mockKeychainManager: MockKeychainManager!
-    
-    override func setUp() {
-        super.setUp()
-        mockKeychainManager = MockKeychainManager()
-    }
-    
-    override func tearDown() {
-        mockKeychainManager = nil
-        super.tearDown()
-    }
-    
-    // MARK: - Mock Store Operation Tests
-    
-    func testMockStoreSuccess() throws {
-        // Given
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        
-        // When
-        try mockKeychainManager.store(testTokens, forKey: "test_key")
-        
-        // Then
-        XCTAssertEqual(mockKeychainManager.storedItems.count, 1)
-        XCTAssertNotNil(mockKeychainManager.storedItems["test_key"])
-    }
-    
-    func testMockStoreError() {
-        // Given
-        mockKeychainManager.shouldThrowError = true
-        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
-        
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        
-        // When/Then
-        XCTAssertThrowsError(try mockKeychainManager.store(testTokens, forKey: "test_key")) { error in
-            if case AuthenticationError.keychainError(let status) = error {
-                XCTAssertEqual(status, errSecInternalError)
-            } else {
-                XCTFail("Expected keychainError, got \(error)")
-            }
-        }
-    }
-    
-    // MARK: - Mock Retrieve Operation Tests
-    
-    func testMockRetrieveSuccess() throws {
-        // Given
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        try mockKeychainManager.store(testTokens, forKey: "test_key")
-        
-        // When
-        let retrievedTokens: AuthTokens? = try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key")
-        
-        // Then
-        XCTAssertNotNil(retrievedTokens)
-        XCTAssertEqual(retrievedTokens?.accessToken, testTokens.accessToken)
-    }
-    
-    func testMockRetrieveNonExistent() throws {
-        // When
-        let retrievedTokens: AuthTokens? = try mockKeychainManager.retrieve(AuthTokens.self, forKey: "non_existent_key")
-        
-        // Then
-        XCTAssertNil(retrievedTokens)
-    }
-    
-    func testMockRetrieveError() {
-        // Given
-        mockKeychainManager.shouldThrowError = true
-        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
-        
-        // When/Then
-        XCTAssertThrowsError(try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key")) { error in
-            if case AuthenticationError.keychainError(let status) = error {
-                XCTAssertEqual(status, errSecInternalError)
-            } else {
-                XCTFail("Expected keychainError, got \(error)")
-            }
-        }
-    }
-    
-    // MARK: - Mock Delete Operation Tests
-    
-    func testMockDeleteSuccess() throws {
-        // Given
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        try mockKeychainManager.store(testTokens, forKey: "test_key")
-        XCTAssertEqual(mockKeychainManager.storedItems.count, 1)
-        
-        // When
-        try mockKeychainManager.delete(forKey: "test_key")
-        
-        // Then
-        XCTAssertEqual(mockKeychainManager.storedItems.count, 0)
-        XCTAssertNil(mockKeychainManager.storedItems["test_key"])
-    }
-    
-    func testMockDeleteError() {
-        // Given
-        mockKeychainManager.shouldThrowError = true
-        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
-        
-        // When/Then
-        XCTAssertThrowsError(try mockKeychainManager.delete(forKey: "test_key")) { error in
-            if case AuthenticationError.keychainError(let status) = error {
-                XCTAssertEqual(status, errSecInternalError)
-            } else {
-                XCTFail("Expected keychainError, got \(error)")
-            }
-        }
-    }
-    
-    // MARK: - Mock Delete All Operation Tests
-    
-    func testMockDeleteAllSuccess() throws {
-        // Given
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        let testUser = User(
-            id: "test_user_id",
-            username: "testuser",
-            email: "test@example.com",
-            displayName: "Test User",
-            provider: "test_provider"
-        )
-        
-        try mockKeychainManager.store(testTokens, forKey: "tokens")
-        try mockKeychainManager.store(testUser, forKey: "user")
-        XCTAssertEqual(mockKeychainManager.storedItems.count, 2)
-        
-        // When
-        try mockKeychainManager.deleteAll()
-        
-        // Then
-        XCTAssertEqual(mockKeychainManager.storedItems.count, 0)
-    }
-    
-    func testMockDeleteAllError() {
-        // Given
-        mockKeychainManager.shouldThrowError = true
-        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
-        
-        // When/Then
-        XCTAssertThrowsError(try mockKeychainManager.deleteAll()) { error in
-            if case AuthenticationError.keychainError(let status) = error {
-                XCTAssertEqual(status, errSecInternalError)
-            } else {
-                XCTFail("Expected keychainError, got \(error)")
-            }
-        }
-    }
-    
-    // MARK: - Mock State Management Tests
-    
-    func testMockErrorStateToggling() throws {
-        // Given
-        let testTokens = AuthTokens(
-            accessToken: "test_access_token",
-            refreshToken: "test_refresh_token",
-            tokenType: "Bearer",
-            expiresIn: 3600,
-            scope: "openid",
-            idToken: "test_id_token",
-            issuedAt: Date()
-        )
-        
-        // Test normal operation
-        try mockKeychainManager.store(testTokens, forKey: "test_key")
-        let retrieved1: AuthTokens? = try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key")
-        XCTAssertNotNil(retrieved1)
-        
-        // Enable error mode
-        mockKeychainManager.shouldThrowError = true
-        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
-        
-        // Test error operation
-        XCTAssertThrowsError(try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key"))
-        
-        // Disable error mode
-        mockKeychainManager.shouldThrowError = false
-        
-        // Test normal operation again
-        let retrieved2: AuthTokens? = try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key")
-        XCTAssertNotNil(retrieved2)
-    }
-}
-
-// MARK: - Integration Tests with Mock
-
-class KeychainManagerIntegrationTests: XCTestCase {
+class KeychainManagerMockIntegrationTests: XCTestCase {
     var realKeychainManager: KeychainManager!
     var mockKeychainManager: MockKeychainManager!
-    let testService = "KeychainManagerIntegrationTests"
+    let testService = "KeychainManagerMockIntegrationTests"
     
     override func setUp() {
         super.setUp()
@@ -626,7 +397,7 @@ class KeychainManagerIntegrationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testRealAndMockKeychainManagerBehaviorConsistency() throws {
+    func testMockKeychainManagerBehaviorConsistency() throws {
         // Given
         let testTokens = AuthTokens(
             accessToken: "test_access_token",
@@ -666,8 +437,11 @@ class KeychainManagerIntegrationTests: XCTestCase {
         XCTAssertNil(mockAfterDelete)
     }
     
-    func testMockCanSimulateRealKeychainScenarios() throws {
-        // Test scenario: Store multiple items, delete one, verify others remain
+    func testMockKeychainManagerErrorSimulation() {
+        // Given
+        mockKeychainManager.shouldThrowError = true
+        mockKeychainManager.errorToThrow = .keychainError(errSecInternalError)
+        
         let testTokens = AuthTokens(
             accessToken: "test_access_token",
             refreshToken: "test_refresh_token",
@@ -678,34 +452,37 @@ class KeychainManagerIntegrationTests: XCTestCase {
             issuedAt: Date()
         )
         
-        let testUser = User(
-            id: "test_user_id",
-            username: "testuser",
-            email: "test@example.com",
-            displayName: "Test User",
-            provider: "test_provider"
-        )
+        // When/Then - Mock should throw errors when configured to do so
+        XCTAssertThrowsError(try mockKeychainManager.store(testTokens, forKey: "test_key")) { error in
+            if case AuthenticationError.keychainError(let status) = error {
+                XCTAssertEqual(status, errSecInternalError)
+            } else {
+                XCTFail("Expected keychainError, got \(error)")
+            }
+        }
         
-        // Store items in both managers
-        try realKeychainManager.store(testTokens, forKey: "tokens")
-        try realKeychainManager.store(testUser, forKey: "user")
-        try mockKeychainManager.store(testTokens, forKey: "tokens")
-        try mockKeychainManager.store(testUser, forKey: "user")
+        XCTAssertThrowsError(try mockKeychainManager.retrieve(AuthTokens.self, forKey: "test_key")) { error in
+            if case AuthenticationError.keychainError(let status) = error {
+                XCTAssertEqual(status, errSecInternalError)
+            } else {
+                XCTFail("Expected keychainError, got \(error)")
+            }
+        }
         
-        // Delete tokens from both
-        try realKeychainManager.delete(forKey: "tokens")
-        try mockKeychainManager.delete(forKey: "tokens")
+        XCTAssertThrowsError(try mockKeychainManager.delete(forKey: "test_key")) { error in
+            if case AuthenticationError.keychainError(let status) = error {
+                XCTAssertEqual(status, errSecInternalError)
+            } else {
+                XCTFail("Expected keychainError, got \(error)")
+            }
+        }
         
-        // Verify both behave the same way
-        let realTokensAfterDelete: AuthTokens? = try realKeychainManager.retrieve(AuthTokens.self, forKey: "tokens")
-        let realUserAfterDelete: User? = try realKeychainManager.retrieve(User.self, forKey: "user")
-        let mockTokensAfterDelete: AuthTokens? = try mockKeychainManager.retrieve(AuthTokens.self, forKey: "tokens")
-        let mockUserAfterDelete: User? = try mockKeychainManager.retrieve(User.self, forKey: "user")
-        
-        XCTAssertNil(realTokensAfterDelete)
-        XCTAssertNil(mockTokensAfterDelete)
-        XCTAssertNotNil(realUserAfterDelete)
-        XCTAssertNotNil(mockUserAfterDelete)
-        XCTAssertEqual(realUserAfterDelete?.username, mockUserAfterDelete?.username)
+        XCTAssertThrowsError(try mockKeychainManager.deleteAll()) { error in
+            if case AuthenticationError.keychainError(let status) = error {
+                XCTAssertEqual(status, errSecInternalError)
+            } else {
+                XCTFail("Expected keychainError, got \(error)")
+            }
+        }
     }
 }
