@@ -41,15 +41,18 @@ IdentityProviderAuth/
 │   └── NetworkManager.swift             # HTTP communication
 ├── Managers/
 │   ├── KeychainManager.swift            # Secure token storage
-│   ├── BiometricManager.swift           # Face ID/Touch ID
+│   ├── BiometricManager.swift           # Face ID/Touch ID/Optic ID
 │   └── ConfigurationManager.swift       # Provider configuration
 ├── Views/
 │   ├── ContentView.swift                # Main app coordinator
 │   ├── LoginView.swift                  # Authentication UI
 │   ├── MainAppView.swift                # Post-auth interface
-│   └── BiometricSetupView.swift         # Biometric setup prompting
-└── Configuration/
-    └── IdentityProviders.plist          # Provider configurations (Keycloak & Auth0 demos)
+│   ├── BiometricSetupView.swift         # Biometric setup prompting
+│   └── BackgroundSecurityView.swift     # Background app security
+├── Configuration/
+│   └── IdentityProviders.plist          # Provider configurations (Keycloak & Auth0 demos)
+├── Assets.xcassets/                     # App icons, colors, images
+└── Preview Content/                     # SwiftUI preview assets
 ```
 
 ## Setup Instructions
@@ -89,19 +92,57 @@ Edit `IdentityProviderAuth/Configuration/IdentityProviders.plist` to add your id
 
 ### 3. Testing
 
-The app includes pre-configured demo providers for testing:
+The app includes comprehensive test coverage with both unit and integration tests:
 
-#### Keycloak Demo (Default)
+#### Test Structure
+- **Unit Tests**: Individual component testing with mocked dependencies
+- **Integration Tests**: End-to-end testing with real component interactions
+- **Session Management Tests**: Comprehensive testing of authentication lifecycle
+
+#### Key Test Coverage
+- Complete session lifecycle with various token states (valid, expired, refresh scenarios)
+- Biometric authentication integration with session management
+- Foreground token refresh with different expiration states
+- Session timeout and user activity tracking validation
+- Authentication-to-logout flow integration testing
+- Error handling and recovery scenarios
+- Mock-based testing for isolated component verification
+
+#### Integration Test Features
+The `SessionManagementIntegrationTest` class provides comprehensive end-to-end testing:
+- **Real Component Interactions**: Tests use actual component implementations with mocked dependencies
+- **Complete Session Flows**: Validates entire authentication lifecycle from login to logout
+- **Token State Management**: Tests all token scenarios (valid, expired, refresh success/failure)
+- **Biometric Integration**: End-to-end biometric authentication with session management
+- **App Lifecycle Testing**: Foreground/background transitions and token refresh scenarios
+- **Error Recovery Testing**: Comprehensive error handling and recovery validation
+
+#### Demo Providers for Testing
+
+**Keycloak Demo (Default)**
 - **Provider**: Keycloak Demo Server
 - **Endpoint**: `https://demo.keycloak.org`
 - **Client ID**: `demo-client`
 - **Test Credentials**: Available on Keycloak demo site
 
-#### Auth0 Demo
+**Auth0 Demo**
 - **Provider**: Auth0 Demo (requires configuration)
 - **Endpoint**: `https://dev-example.auth0.com`
 - **Client ID**: Update with your Auth0 client ID
 - **Configuration**: Replace with your Auth0 domain and client details
+
+#### Running Tests
+
+```bash
+# Run all tests
+xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'platform=iOS Simulator,name=iPhone 15'
+
+# Run specific test suite
+xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:IdentityProviderAuthTests/SessionManagementIntegrationTest
+
+# Run tests in Xcode
+# Product > Test (⌘+U)
+```
 
 ## Usage
 
@@ -177,16 +218,28 @@ xcodebuild -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth 
 
 # Run tests
 xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'platform=iOS Simulator,name=iPhone 15'
+
+# Build for device
+xcodebuild -project IdentityProviderAuth.xcodeproj -scheme IdentityProviderAuth -destination 'generic/platform=iOS' build
 ```
 
 ### Dependencies
 
 - **Foundation**: Core Swift functionality
 - **SwiftUI**: User interface framework
-- **Security**: Keychain Services
-- **LocalAuthentication**: Biometric authentication
-- **Network**: Connectivity monitoring
-- **Combine**: Reactive programming
+- **Security**: Keychain Services for secure token storage
+- **LocalAuthentication**: Biometric authentication (Face ID/Touch ID/Optic ID)
+- **Network**: Connectivity monitoring and HTTPS communication
+- **Combine**: Reactive programming for state management
+
+### Project Configuration
+
+- **iOS Deployment Target**: iOS 17.0+
+- **Swift Version**: 5.0
+- **Xcode Version**: 15.0+
+- **Bundle Identifier**: `com.example.IdentityProviderAuth`
+- **Face ID Usage**: Configured with appropriate usage description
+- **Supported Orientations**: Portrait and Landscape (iPhone and iPad)
 
 ## Troubleshooting
 
@@ -197,19 +250,7 @@ xcodebuild test -project IdentityProviderAuth.xcodeproj -scheme IdentityProvider
 3. **Keychain Errors**: May require app reinstall during development
 4. **Biometric Failures**: Ensure device supports and has biometrics configured
 
-### Biometric Authentication Issues
 
-- **Setup Not Appearing**: Biometric setup only prompts once per user choice
-- **Authentication Failing**: Check device biometric enrollment and app permissions
-- **Preference Not Saving**: Verify UserDefaults access and app permissions
-- **Fallback Not Working**: Ensure password authentication is properly configured
-
-### Session Management Issues
-
-- **Unexpected Logout**: Check if 30-minute inactivity timeout has been reached
-- **Session Not Timing Out**: Verify user activity tracking is working correctly
-- **Token Refresh Failing**: Check network connectivity and provider availability
-- **App Lifecycle Issues**: Ensure proper foreground/background handling
 
 ### Error Messages
 

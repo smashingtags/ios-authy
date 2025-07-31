@@ -212,20 +212,44 @@ func validateProvider(_ provider: IdentityProvider) throws {
 
 ### 10. Security Testing
 
+#### Comprehensive Integration Testing
+The app includes extensive integration tests that validate security-critical functionality:
+
+**Session Management Security Testing**:
+- **Token Lifecycle Validation**: Tests complete token lifecycle from authentication to expiration
+- **Biometric Security Integration**: Validates biometric authentication security with session management
+- **Session Timeout Security**: Verifies proper session timeout and automatic logout functionality
+- **Token Refresh Security**: Tests secure token refresh scenarios and failure handling
+- **State Transition Security**: Validates secure state transitions during authentication flows
+
+**Security Test Coverage**:
+```swift
+// Example security-focused integration tests
+func testSessionLifecycleWithExpiredTokensAndSuccessfulRefresh() async
+func testSessionLifecycleWithBiometricAuthentication() async
+func testForegroundTokenRefreshIntegration() async
+func testLogoutClearsSessionState() async
+```
+
 #### Penetration Testing Considerations
 - **Network Traffic Analysis**: Verify HTTPS usage and certificate validation
 - **Token Security**: Verify secure token storage and handling
 - **Authentication Bypass**: Test for authentication bypass vulnerabilities
+- **Session Management**: Validate session timeout and token refresh security
+- **Biometric Security**: Test biometric authentication bypass attempts
 
 #### Security Audit Checklist
-- [ ] All network communication uses HTTPS
-- [ ] Tokens stored securely in iOS Keychain
-- [ ] Biometric authentication properly implemented
-- [ ] Screen protection mechanisms in place
-- [ ] Error messages don't reveal sensitive information
-- [ ] Input validation prevents injection attacks
-- [ ] Session management properly implemented
-- [ ] Configuration validation prevents misconfigurations
+- [x] All network communication uses HTTPS
+- [x] Tokens stored securely in iOS Keychain
+- [x] Biometric authentication properly implemented
+- [x] Screen protection mechanisms in place
+- [x] Error messages don't reveal sensitive information
+- [x] Input validation prevents injection attacks
+- [x] Session management properly implemented with comprehensive testing
+- [x] Configuration validation prevents misconfigurations
+- [x] Integration tests validate security-critical flows
+- [x] Token lifecycle security thoroughly tested
+- [x] Biometric authentication security validated through integration tests
 
 ### 11. Incident Response
 

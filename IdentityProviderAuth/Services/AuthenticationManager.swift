@@ -51,7 +51,13 @@ class AuthenticationManager: ObservableObject {
         Task {
             // Check if we have stored tokens first
             do {
-                let _: AuthTokens = try keychainManager.retrieve(AuthTokens.self, forKey: KeychainManager.Keys.authTokens)
+                let tokens: AuthTokens? = try keychainManager.retrieve(AuthTokens.self, forKey: KeychainManager.Keys.authTokens)
+                guard tokens != nil else {
+                    await MainActor.run {
+                        self.authenticationState = .unauthenticated
+                    }
+                    return
+                }
                 
                 // If biometric auth is enabled and available, prompt for biometric authentication
                 if biometricManager.isBiometricAuthenticationEnabled() && biometricManager.isBiometricAuthenticationAvailable() {

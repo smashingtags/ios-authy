@@ -186,18 +186,44 @@ enum AuthenticationError: LocalizedError {
 - **Protocol Mocking**: Easy mocking through protocols
 - **Isolated Testing**: Each component tested in isolation
 - **State Testing**: Authentication state transitions
+- **Component Validation**: Individual manager and service testing
 
 ### Integration Testing
 
-- **End-to-End Flows**: Complete authentication flows
-- **Network Mocking**: Mocked network responses
-- **Keychain Testing**: Mocked keychain operations
+The app includes comprehensive integration tests that verify complete system behavior:
+
+#### Session Management Integration Tests
+- **Complete Session Lifecycle**: Tests full authentication lifecycle with various token states
+- **Token State Scenarios**: Valid tokens, expired tokens, successful refresh, failed refresh
+- **Biometric Integration**: End-to-end biometric authentication with session management
+- **Foreground Token Refresh**: Automatic token refresh scenarios when app returns to foreground
+- **Session Timeout Validation**: User activity tracking and inactivity timeout testing
+- **Authentication-to-Logout Flow**: Complete user journey from login to logout
+
+#### Key Integration Test Coverage
+```swift
+// Example integration test structure
+class SessionManagementIntegrationTest: XCTestCase {
+    func testCompleteSessionLifecycleWithValidTokens() async
+    func testSessionLifecycleWithExpiredTokensAndSuccessfulRefresh() async
+    func testSessionLifecycleWithBiometricAuthentication() async
+    func testForegroundTokenRefreshIntegration() async
+    func testCompleteAuthenticationToLogoutFlow() async
+}
+```
+
+#### Mock-Based Testing
+- **Real Component Interactions**: Tests use actual component implementations with mocked dependencies
+- **Dependency Injection**: Comprehensive mocking of external dependencies (keychain, network, biometrics)
+- **State Verification**: Validates proper state transitions and data persistence
+- **Error Scenario Testing**: Comprehensive error handling and recovery testing
 
 ### UI Testing
 
-- **User Interactions**: Login form interactions
-- **Navigation Testing**: State-based navigation
+- **User Interactions**: Login form interactions and validation
+- **Navigation Testing**: State-based navigation between authentication states
 - **Accessibility**: VoiceOver and Dynamic Type support
+- **Biometric UI Testing**: Biometric setup and authentication flows
 
 ## Performance Considerations
 

@@ -47,12 +47,27 @@ struct IdentityProvider: Codable {
 
 // MARK: - Authentication State
 
-enum AuthenticationState {
+enum AuthenticationState: Equatable {
     case unauthenticated
     case authenticating
     case authenticated(User)
     case biometricPrompt
     case error(AuthenticationError)
+    
+    static func == (lhs: AuthenticationState, rhs: AuthenticationState) -> Bool {
+        switch (lhs, rhs) {
+        case (.unauthenticated, .unauthenticated),
+             (.authenticating, .authenticating),
+             (.biometricPrompt, .biometricPrompt):
+            return true
+        case (.authenticated(let lhsUser), .authenticated(let rhsUser)):
+            return lhsUser.id == rhsUser.id
+        case (.error(let lhsError), .error(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+        default:
+            return false
+        }
+    }
 }
 
 // MARK: - Error Types
